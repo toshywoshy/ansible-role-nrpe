@@ -1,0 +1,34 @@
+- name: install nrpe packages and dependencies
+  action: yum pkg={{ item }} state=latest
+  with_items:
+    - nrpe
+    - nagios-plugins-disk
+    - nagios-plugins-load
+    - nagios-plugins-users
+    - nagios-plugins-procs
+    - nagios-plugins-swap
+    - nagios-plugins-check_iostat
+    - bc
+    - sysstat
+
+- name: base nrpe config
+  action: template src=nrpe.cfg dest=/etc/nagios/nrpe.cfg
+
+- name: nrpe commands
+  action: template src={{ item }}.cfg dest=/etc/nrpe.d/
+  with_items:
+    - users
+    - disk
+    - procs
+    - load
+    - swap
+    - iostat
+
+#- name: set SELinux port settings
+#  action: command semanage port -a -t inetd_child_port_t -p tcp {{ nrpe.port }}
+#  when: nrpe.port is defined or nrpe.port != 5666
+#  #setsebool -P allow_ypbind=on
+#  #inetd_child_port_t
+
+- name: restart nrpe daemon
+  action: service name=nrpe state=restarted enabled=yes

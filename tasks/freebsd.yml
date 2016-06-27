@@ -1,0 +1,20 @@
+- name: install nrpe packages and dependencies
+  action: pkgng pkg={{ item }} state=present
+  with_items:
+    - nrpe
+    - nagios-plugins
+- name: base nrpe config
+  action: template src=nrpe.cfg dest={{ nrpe_etcdir }}nrpe.cfg
+- name: create nrpe directory
+  action: file path={{ nrpe_includedir }} owner=nagios group=nagios mode=660 state=directory
+- name: nrpe commands
+  action: template src={{ item }}.cfg dest={{ nrpe_includedir }}
+  with_items:
+    - users
+    - disk
+    - procs
+    - load
+    - swap
+    - iostat
+- name: restart nrpe daemon
+  action: service name=nrpe2 state=restarted enabled=yes

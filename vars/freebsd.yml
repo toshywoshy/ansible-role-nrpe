@@ -1,0 +1,8 @@
+---
+nrpe_pidfile: /var/run/nrpe2/nrpe2.pid
+nrpe_user: nagios
+nrpe_group: nagios
+nrpe_etcdir: /usr/local/etc/
+nrpe_includedir: /usr/local/etc/nrpe.d/
+nrpe_checkcmddir: /usr/local/libexec/nagios/
+nrpe_ssl: false

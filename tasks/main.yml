@@ -1,0 +1,22 @@
+- name: set variables for nrpe - RedHat
+  include_vars: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: install nrpe packages and configuration - RedHat
+  include: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: set variables for nrpe - FreeBSD
+  include_vars: freebsd.yml
+  when: ansible_os_family == 'FreeBSD'
+
+- name: install nrpe packages and configuration - FreeBSD
+  include: freebsd.yml
+  when: ansible_os_family == 'FreeBSD'
+
+- name: add host to monitoring system
+#  action: template src=host.cfg dest=/etc/shinken/objects/hosts/{{ inventory_hostname }}.{{ domain }}.cfg owner=nagios group=nagios mode=550 setype=etc_t
+  action: template src=host.conf dest=/etc/icinga2/zones.d/{{ nrpe.zone }}/{{ inventory_hostname }}.{{ domain }}.conf owner=icinga group=icinga mode=550 setype=etc_t
+  delegate_to: trivikrama
+#  notify: reload shinken
+  notify: reload icinga2

@@ -1,0 +1,7 @@
+- name: reload icinga2
+  action: service name=icinga2 state=restarted
+  delegate_to: trivikrama
+
+#- name: reload shinken
+#  action: service name=shinken-arbiter state=restarted sleep=30
+#  delegate_to: trivikrama
